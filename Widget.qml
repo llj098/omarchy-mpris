@@ -108,6 +108,18 @@ BarWidget {
 
           property bool expanded: false
 
+          function formatTime(seconds) {
+            var total = Math.max(0, Math.floor(Number(seconds) || 0))
+            var hours = Math.floor(total / 3600)
+            var minutes = Math.floor((total % 3600) / 60)
+            var secs = total % 60
+            var paddedMinutes = hours > 0 && minutes < 10 ? "0" + minutes : String(minutes)
+            var paddedSeconds = secs < 10 ? "0" + secs : String(secs)
+            return hours > 0
+              ? hours + ":" + paddedMinutes + ":" + paddedSeconds
+              : minutes + ":" + paddedSeconds
+          }
+
           width: content.width
           implicitHeight: playerContent.implicitHeight
 
@@ -116,6 +128,13 @@ BarWidget {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: playerRow.expanded = !playerRow.expanded
+          }
+
+          Timer {
+            interval: 1000
+            repeat: true
+            running: playerRow.expanded && player.isPlaying && !progressSlider.dragging
+            onTriggered: player.positionChanged()
           }
 
           Column {
@@ -219,6 +238,52 @@ BarWidget {
                 font.family: root.bar.fontFamily
                 font.pixelSize: Style.font.bodySmall
                 wrapMode: Text.Wrap
+              }
+
+              Column {
+                width: parent.width
+                visible: player.positionSupported && player.lengthSupported && player.length > 0
+                spacing: Style.space(2)
+
+                PanelSlider {
+                  id: progressSlider
+                  width: parent.width
+                  bar: root.bar
+                  minimum: 0
+                  maximum: Math.max(1, player.length)
+                  value: player.position
+                  step: 5
+                  enabled: player.canSeek
+                  opacity: enabled ? 1.0 : 0.4
+                  onReleased: function(value) {
+                    if (enabled) player.position = value
+                  }
+                }
+
+                Item {
+                  width: parent.width
+                  implicitHeight: Math.max(elapsedTime.implicitHeight, totalTime.implicitHeight)
+
+                  Text {
+                    id: elapsedTime
+                    anchors.left: parent.left
+                    text: playerRow.formatTime(progressSlider.dragging
+                      ? progressSlider.liveValue
+                      : player.position)
+                    color: Qt.darker(root.bar.foreground, 1.4)
+                    font.family: root.bar.fontFamily
+                    font.pixelSize: Style.font.caption
+                  }
+
+                  Text {
+                    id: totalTime
+                    anchors.right: parent.right
+                    text: playerRow.formatTime(player.length)
+                    color: Qt.darker(root.bar.foreground, 1.4)
+                    font.family: root.bar.fontFamily
+                    font.pixelSize: Style.font.caption
+                  }
+                }
               }
 
               Item {
