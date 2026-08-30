@@ -10,6 +10,7 @@ BarWidget {
 
   readonly property int playerCount: Mpris.players.values.length
   property bool opened: false
+  property int seekLogCount: 0
 
   function open() { opened = true }
   function close() { opened = false }
@@ -258,8 +259,11 @@ BarWidget {
                   onReleased: function(value) {
                     if (!enabled) return
                     var target = Math.max(0, Math.min(value, player.length - 0.1))
-                    console.info("[fatlj.mpris] seek", player.dbusName,
-                      "target=" + target, "length=" + player.length)
+                    if (root.seekLogCount < 100) {
+                      root.seekLogCount += 1
+                      console.info("[fatlj.mpris] seek", player.dbusName,
+                        "target=" + target, "length=" + player.length)
+                    }
                     player.position = target
                   }
                 }
