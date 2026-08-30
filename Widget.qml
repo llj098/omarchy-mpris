@@ -99,7 +99,10 @@ BarWidget {
         delegate: Item {
           required property var modelData
           readonly property var player: modelData
-          readonly property var app: DesktopEntries.heuristicLookup(player.desktopEntry || player.identity)
+          readonly property string appQuery: String(player.dbusName || "").indexOf(".brave.") >= 0
+            ? "brave-browser"
+            : (player.desktopEntry || player.identity)
+          readonly property var app: DesktopEntries.heuristicLookup(appQuery)
 
           width: content.width
           implicitHeight: Math.max(appIcon.height, label.implicitHeight, control.implicitHeight)
