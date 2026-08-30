@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "fatlj.mpris",
+  "name": "Media Players",
+  "version": "0.1.0",
+  "author": "fatlj",
+  "description": "One play/pause control per MPRIS player.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "Media Players",
+    "description": "One play/pause control per MPRIS player",
+    "category": "Media",
+    "defaultSection": "right",
+    "allowMultiple": false
+  }
+}
