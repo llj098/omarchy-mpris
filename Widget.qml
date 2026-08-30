@@ -105,7 +105,7 @@ BarWidget {
           readonly property var app: DesktopEntries.heuristicLookup(appQuery)
 
           width: content.width
-          implicitHeight: Math.max(appIcon.height, label.implicitHeight, control.implicitHeight)
+          implicitHeight: Math.max(appIcon.height, labels.implicitHeight, control.implicitHeight)
 
           Image {
             id: appIcon
@@ -117,19 +117,37 @@ BarWidget {
             fillMode: Image.PreserveAspectFit
           }
 
-          Text {
-            id: label
+          Column {
+            id: labels
             anchors.left: appIcon.right
             anchors.leftMargin: Style.space(8)
             anchors.right: control.left
             anchors.rightMargin: Style.space(8)
             anchors.verticalCenter: parent.verticalCenter
-            text: player.trackTitle || player.identity || player.desktopEntry || player.dbusName
-            color: root.bar.foreground
-            font.family: root.bar.fontFamily
-            font.pixelSize: Style.font.body
-            elide: Text.ElideRight
-            clip: true
+            spacing: Style.space(2)
+
+            Text {
+              width: parent.width
+              text: player.trackTitle || player.identity || player.desktopEntry || player.dbusName
+              color: root.bar.foreground
+              font.family: root.bar.fontFamily
+              font.pixelSize: Style.font.body
+              elide: Text.ElideRight
+              clip: true
+            }
+
+            Text {
+              width: parent.width
+              text: player.trackArtist
+                + (player.trackArtist && player.trackAlbum ? " · " : "")
+                + player.trackAlbum
+              visible: text !== ""
+              color: Qt.darker(root.bar.foreground, 1.4)
+              font.family: root.bar.fontFamily
+              font.pixelSize: Style.font.caption
+              elide: Text.ElideRight
+              clip: true
+            }
           }
 
           Button {
