@@ -42,25 +42,55 @@ BarWidget {
     Column {
       id: content
       anchors.fill: parent
-      spacing: Style.space(8)
+      spacing: Style.space(14)
 
-      Row {
-        spacing: Style.space(8)
+      Item {
+        width: parent.width
+        implicitHeight: Math.max(heroIcon.implicitHeight, heroLabels.implicitHeight)
 
         Text {
+          id: heroIcon
+          anchors.left: parent.left
+          anchors.verticalCenter: parent.verticalCenter
           text: "󰝚"
           color: root.bar.foreground
           font.family: root.bar.fontFamily
-          font.pixelSize: Style.font.icon
+          font.pixelSize: Style.font.display
         }
 
-        Text {
-          text: "Media players"
-          color: root.bar.foreground
-          font.family: root.bar.fontFamily
-          font.pixelSize: Style.font.title
-          font.bold: true
+        Column {
+          id: heroLabels
+          anchors.left: heroIcon.right
+          anchors.leftMargin: Style.space(14)
+          anchors.right: parent.right
+          anchors.verticalCenter: parent.verticalCenter
+          spacing: Style.space(2)
+
+          Text {
+            width: parent.width
+            text: "Media Players"
+            color: root.bar.foreground
+            font.family: root.bar.fontFamily
+            font.pixelSize: Style.font.title
+            font.bold: true
+            elide: Text.ElideRight
+          }
+
+          Text {
+            width: parent.width
+            text: root.playerCount + (root.playerCount === 1 ? " PLAYER" : " PLAYERS")
+            color: Qt.darker(root.bar.foreground, 1.4)
+            font.family: root.bar.fontFamily
+            font.pixelSize: Style.font.caption
+            font.bold: true
+            font.letterSpacing: 1.2
+            elide: Text.ElideRight
+          }
         }
+      }
+
+      PanelSeparator {
+        foreground: root.bar.foreground
       }
 
       Repeater {
