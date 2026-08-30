@@ -192,6 +192,15 @@ BarWidget {
               visible: playerRow.expanded
               spacing: Style.space(4)
 
+              Image {
+                width: Style.space(96)
+                height: width
+                anchors.horizontalCenter: parent.horizontalCenter
+                visible: player.trackArtUrl !== "" && status !== Image.Error
+                source: player.trackArtUrl
+                fillMode: Image.PreserveAspectFit
+              }
+
               Text {
                 width: parent.width
                 visible: player.trackArtist !== ""
