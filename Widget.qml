@@ -256,7 +256,11 @@ BarWidget {
                   enabled: player.canSeek
                   opacity: enabled ? 1.0 : 0.4
                   onReleased: function(value) {
-                    if (enabled) player.position = value
+                    if (!enabled) return
+                    var target = Math.max(0, Math.min(value, player.length - 0.1))
+                    console.info("[fatlj.mpris] seek", player.dbusName,
+                      "target=" + target, "length=" + player.length)
+                    player.position = target
                   }
                 }
 
